@@ -19,6 +19,7 @@ public abstract class EpochLearner extends RandomLearner
     public EpochLearner(Random random)
     {
         super(random);
+        totalEpochs = 0;
     }
 
     public void train(LearningStrategy strategy) throws Exception
@@ -126,7 +127,7 @@ public abstract class EpochLearner extends RandomLearner
         ++this.totalEpochs;
     }
 
-    private boolean shouldOutput()
+    protected boolean shouldOutput()
     {
         return (getOutputFile() != null);
     }

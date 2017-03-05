@@ -1,7 +1,6 @@
 package edu.byu.cstaheli.cs478.perceptron;
 
 import edu.byu.cstaheli.cs478.toolkit.MLSystemManager;
-import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 import java.util.Random;
 
@@ -29,11 +28,10 @@ public class MultipleOutputPerceptron extends Perceptron
         return super.getActivation(rowWeights, row);
     }
 
-    @Override
-    protected double getExpected(Matrix labels, int row)
+
+    protected double getExpected(double expected)
     {
-        double actualExpected = labels.get(row, 0);
-        return actualExpected == wantedLabelIndex ? 1 : 0;
+        return expected == wantedLabelIndex ? 1 : 0;
     }
 
     @Override

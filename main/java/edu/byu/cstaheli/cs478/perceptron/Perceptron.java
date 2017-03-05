@@ -2,7 +2,6 @@ package edu.byu.cstaheli.cs478.perceptron;
 
 import edu.byu.cstaheli.cs478.toolkit.learner.EpochLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
-import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,9 +29,9 @@ public class Perceptron extends EpochLearner
 //        writeAccuraciesAndFinalWeights();
     }
 
-    protected double getExpected(Matrix labels, int row)
+    protected double getExpected(double expected)
     {
-        return labels.get(row, 0);
+        return expected;
     }
 
     protected double getActivation(double[] rowWeights, double[] row)
@@ -73,7 +72,7 @@ public class Perceptron extends EpochLearner
         {
             double input = row[i];
             double actual = getActivation(getWeights(), row);
-            double newWeight = calcNewWeight(getWeights()[i], getLearningRate(), expectedOutput, actual, input);
+            double newWeight = calcNewWeight(getWeights()[i], getLearningRate(), getExpected(expectedOutput), actual, input);
             getWeights()[i] = newWeight;
         }
     }
@@ -98,7 +97,7 @@ public class Perceptron extends EpochLearner
 
     public void writeAccuraciesAndFinalWeights(double trainAccuracy, double testAccuracy)
     {
-        if (getOutputFile() != null)
+        if (shouldOutput())
         {
             try (FileWriter writer = new FileWriter(getOutputFile(), true))
             {
