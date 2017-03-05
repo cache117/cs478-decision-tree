@@ -181,6 +181,6 @@ public abstract class SupervisedLearner
 
     private double calcMeanSquaredError(double expected, double actual)
     {
-        return (expected * actual) * (expected * actual);
+        return (expected - actual) * (expected - actual);
     }
 }
