@@ -41,11 +41,4 @@ public class BaselineLearner extends SupervisedLearner
     {
         System.arraycopy(m_labels, 0, labels, 0, m_labels.length);
     }
-
-    @Override
-    public void writeAccuraciesAndFinalWeights(double trainAccuracy, double testAccuracy)
-    {
-
-    }
-
 }

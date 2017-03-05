@@ -7,20 +7,13 @@ package edu.byu.cstaheli.cs478.toolkit.learner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
 import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
-import java.io.FileWriter;
-import java.io.IOException;
-
 public abstract class SupervisedLearner
 {
-    private static final boolean OUTPUT_EACH_EPOCH = false;
-
-    private int totalEpochs;
     private double learningRate;
     private String outputFile;
 
     protected SupervisedLearner()
     {
-        totalEpochs = 0;
         setLearningRate(.1);
     }
 
@@ -108,16 +101,6 @@ public abstract class SupervisedLearner
         }
     }
 
-    public int getTotalEpochs()
-    {
-        return totalEpochs;
-    }
-
-    public void incrementTotalEpochs()
-    {
-        ++this.totalEpochs;
-    }
-
     public double getLearningRate()
     {
         return learningRate;
@@ -126,41 +109,6 @@ public abstract class SupervisedLearner
     public void setLearningRate(double learningRate)
     {
         this.learningRate = learningRate;
-    }
-
-    protected void completeEpoch(int epoch, double classificationAccuracy)
-    {
-        if (outputFile != null && OUTPUT_EACH_EPOCH)
-        {
-            try (FileWriter writer = new FileWriter(outputFile, true))
-            {
-                writer.append(String.format("%s, %s\n", epoch, classificationAccuracy));
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    protected void completeEpoch(int epoch, double trainingMSE, double validationMSE, double classificationAccuracy)
-    {
-        if (outputFile != null && OUTPUT_EACH_EPOCH)
-        {
-            try (FileWriter writer = new FileWriter(outputFile, true))
-            {
-                writer.append(String.format("%s, %s, %s, %s\n", epoch, trainingMSE, validationMSE, classificationAccuracy));
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void writeAccuraciesAndFinalWeights(double trainAccuracy, double testAccuracy)
-    {
-
     }
 
     protected double calcMeanSquaredError(Matrix features, Matrix labels) throws Exception

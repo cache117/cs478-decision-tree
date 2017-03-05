@@ -12,6 +12,10 @@ import java.util.Random;
  */
 public abstract class EpochLearner extends RandomLearner
 {
+    private static final boolean OUTPUT_EACH_EPOCH = false;
+
+    private int totalEpochs;
+
     public EpochLearner(Random random)
     {
         super(random);
@@ -67,9 +71,6 @@ public abstract class EpochLearner extends RandomLearner
 
     protected abstract boolean isThresholdValidationAccuracyMet(double validationAccuracy, double bestAccuracy);
 
-    @Override
-    public abstract void writeAccuraciesAndFinalWeights(double trainAccuracy, double testAccuracy);
-
     protected void outputFinalAccuracies(int epoch, double trainingMSE, double validationMSE, double testMSE, double validationClassificationAccuracy, double testClassificationAccuracy)
     {
         if (getOutputFile() != null)
@@ -83,5 +84,50 @@ public abstract class EpochLearner extends RandomLearner
                 e.printStackTrace();
             }
         }
+    }
+
+    public int getTotalEpochs()
+    {
+        return totalEpochs;
+    }
+
+    protected void completeEpoch(int epoch, double classificationAccuracy)
+    {
+        if (shouldOutput() && OUTPUT_EACH_EPOCH)
+        {
+            try (FileWriter writer = new FileWriter(getOutputFile(), true))
+            {
+                writer.append(String.format("%s, %s\n", epoch, classificationAccuracy));
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    protected void completeEpoch(int epoch, double trainingMSE, double validationMSE, double classificationAccuracy)
+    {
+        if (shouldOutput() && OUTPUT_EACH_EPOCH)
+        {
+            try (FileWriter writer = new FileWriter(getOutputFile(), true))
+            {
+                writer.append(String.format("%s, %s, %s, %s\n", epoch, trainingMSE, validationMSE, classificationAccuracy));
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void incrementTotalEpochs()
+    {
+        ++this.totalEpochs;
+    }
+
+    private boolean shouldOutput()
+    {
+        return (getOutputFile() != null);
     }
 }

@@ -4,6 +4,8 @@ import edu.byu.cstaheli.cs478.toolkit.learner.EpochLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
 import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -25,6 +27,7 @@ public class Perceptron extends EpochLearner
     public void train(LearningStrategy strategy) throws Exception
     {
         super.train(strategy);
+//        writeAccuraciesAndFinalWeights();
     }
 
     protected double getExpected(Matrix labels, int row)
@@ -93,18 +96,20 @@ public class Perceptron extends EpochLearner
         return false;
     }
 
-    @Override
     public void writeAccuraciesAndFinalWeights(double trainAccuracy, double testAccuracy)
     {
-        /*try (FileWriter writer = new FileWriter("datasets/accuracyVsEpochs.csv", true))
+        if (getOutputFile() != null)
         {
-            writer.append(String.format("Accuracy\n%s, %s\n", trainingAccuracy, testingAccuracy));
-            writer.append(String.format("Final Weights\n%s", getArrayString(weights)));
+            try (FileWriter writer = new FileWriter(getOutputFile(), true))
+            {
+                writer.append(String.format("Accuracy\n%s, %s\n", trainAccuracy, testAccuracy));
+                writer.append(String.format("Final Weights\n%s", getArrayString(weights)));
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }*/
     }
 
     private double calcNewWeight(double oldWeight, double learningRate, double expected, double actual, double input)
@@ -120,5 +125,15 @@ public class Perceptron extends EpochLearner
     public void setWeights(double[] weights)
     {
         this.weights = weights;
+    }
+
+    private String getArrayString(double[] array)
+    {
+        StringBuilder builder = new StringBuilder();
+        for (double anArray : array)
+        {
+            builder.append(",").append(anArray);
+        }
+        return builder.toString();
     }
 }

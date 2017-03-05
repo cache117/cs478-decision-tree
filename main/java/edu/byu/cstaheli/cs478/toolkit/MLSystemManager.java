@@ -9,6 +9,7 @@ import edu.byu.cstaheli.cs478.backpropogation.BackPropagation;
 import edu.byu.cstaheli.cs478.baseline.BaselineLearner;
 import edu.byu.cstaheli.cs478.decision_tree.DecisionTree;
 import edu.byu.cstaheli.cs478.perceptron.Perceptron;
+import edu.byu.cstaheli.cs478.toolkit.learner.EpochLearner;
 import edu.byu.cstaheli.cs478.toolkit.learner.LearnerData;
 import edu.byu.cstaheli.cs478.toolkit.learner.SupervisedLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.*;
@@ -132,7 +133,10 @@ public class MLSystemManager
             confusion.print();
             System.out.println("\n");
         }
-        System.out.println("Total number of epochs: " + learner.getTotalEpochs());
+        if (learner instanceof EpochLearner)
+        {
+            System.out.println("Total number of epochs: " + ((EpochLearner) learner).getTotalEpochs());
+        }
     }
 
     private void calcStatic(SupervisedLearner learner, LearnerData learnerData) throws Exception
@@ -155,7 +159,14 @@ public class MLSystemManager
             confusion.print();
             System.out.println("\n");
         }
-        System.out.println("Total number of epochs: " + learner.getTotalEpochs());
+        if (learner instanceof Perceptron)
+        {
+            ((Perceptron) learner).writeAccuraciesAndFinalWeights(trainAccuracy, testAccuracy);
+        }
+        if (learner instanceof EpochLearner)
+        {
+            System.out.println("Total number of epochs: " + ((EpochLearner) learner).getTotalEpochs());
+        }
     }
 
     private void calcRandom(SupervisedLearner learner, LearnerData learnerData) throws Exception
@@ -178,8 +189,14 @@ public class MLSystemManager
             confusion.print();
             System.out.println("\n");
         }
-        learner.writeAccuraciesAndFinalWeights(trainAccuracy, testAccuracy);
-        System.out.println("Total number of epochs: " + learner.getTotalEpochs());
+        if (learner instanceof Perceptron)
+        {
+            ((Perceptron) learner).writeAccuraciesAndFinalWeights(trainAccuracy, testAccuracy);
+        }
+        if (learner instanceof EpochLearner)
+        {
+            System.out.println("Total number of epochs: " + ((EpochLearner) learner).getTotalEpochs());
+        }
     }
 
     private void calcCrossValidation(SupervisedLearner learner, LearnerData learnerData) throws Exception
@@ -221,7 +238,10 @@ public class MLSystemManager
         elapsedTime /= (reps * folds);
         System.out.println("Average time to train (in seconds): " + elapsedTime / 1000.0);
         System.out.println("Mean accuracy=" + (sumAccuracy / (reps * folds)));
-        System.out.println("Total number of epochs: " + learner.getTotalEpochs());
+        if (learner instanceof EpochLearner)
+        {
+            System.out.println("Total number of epochs: " + ((EpochLearner) learner).getTotalEpochs());
+        }
     }
 
     private void printStats(String fileName, String learnerName, String evalMethod, Matrix data)

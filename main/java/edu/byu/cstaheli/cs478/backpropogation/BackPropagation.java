@@ -199,20 +199,6 @@ public class BackPropagation extends EpochLearner
     }
 
     @Override
-    public void writeAccuraciesAndFinalWeights(double trainAccuracy, double testAccuracy)
-    {
-        /*try (FileWriter writer = new FileWriter("datasets/accuracyVsEpochs.csv", true))
-        {
-            writer.append(String.format("Accuracy\n%s, %s\n", trainingAccuracy, testingAccuracy));
-            writer.append(String.format("Final Weights\n%s", getArrayString(weights)));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }*/
-    }
-
-    @Override
     public void predict(double[] features, double[] labels) throws Exception
     {
         List<Double> hiddenLayerOutputs = getLayerOutputs(convertInputRow(features), hiddenLayer);
