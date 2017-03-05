@@ -174,12 +174,12 @@ public abstract class SupervisedLearner
             double[] label = new double[1];
             predict(row, label);
             double predicted = label[0];
-            mse += calcMeanSquaredError(output, predicted);
+            mse += calcSquaredError(output, predicted);
         }
         return mse / features.rows();
     }
 
-    private double calcMeanSquaredError(double expected, double actual)
+    private double calcSquaredError(double expected, double actual)
     {
         return (expected - actual) * (expected - actual);
     }
