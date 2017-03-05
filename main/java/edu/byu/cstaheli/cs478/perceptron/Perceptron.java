@@ -26,7 +26,6 @@ public class Perceptron extends EpochLearner
     public void train(LearningStrategy strategy) throws Exception
     {
         super.train(strategy);
-//        writeAccuraciesAndFinalWeights();
     }
 
     protected double getExpected(double expected)
