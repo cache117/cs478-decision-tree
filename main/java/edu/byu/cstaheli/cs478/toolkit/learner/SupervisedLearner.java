@@ -1,10 +1,11 @@
-package edu.byu.cstaheli.cs478.toolkit;
+package edu.byu.cstaheli.cs478.toolkit.learner;
 // ----------------------------------------------------------------
 // The contents of this file are distributed under the CC0 license.
 // See http://creativecommons.org/publicdomain/zero/1.0/
 // ----------------------------------------------------------------
 
 import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
+import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,46 +24,17 @@ public abstract class SupervisedLearner
         setLearningRate(.1);
     }
 
-    public void train(LearningStrategy strategy) throws Exception
+    protected String getOutputFile()
     {
-        Matrix trainingFeatures = strategy.getTrainingFeatures();
-        Matrix trainingLabels = strategy.getTrainingLabels();
-        initializeWeights(trainingFeatures.cols(), trainingLabels.valueCount(0));
-        //Get a baseline accuracy
-        double trainingMSE = calcMeanSquaredError(trainingFeatures, trainingLabels);
-        double validationMSE = calcMeanSquaredError(strategy.getValidationFeatures(), strategy.getValidationLabels());
-        double validationAccuracy = calculateValidationSetAccuracy(strategy);
-        double bestAccuracy = validationAccuracy;
-        completeEpoch(0, trainingMSE, validationMSE, validationAccuracy);
-        boolean keepTraining = true;
-        //for each epoch
-        while (keepTraining)
-        {
-            //for each training data instance
-            trainingFeatures = strategy.getTrainingFeatures();
-            trainingLabels = strategy.getTrainingLabels();
-            for (int i = 0; i < trainingFeatures.rows(); ++i)
-            {
-                analyzeInputRow(trainingFeatures.row(i), trainingLabels.get(i, 0));
-                //propagate error through the network
-                //adjust the weights
-            }
-            //calculate the accuracy over training data
-            trainingMSE = calcMeanSquaredError(trainingFeatures, trainingLabels);
-            //for each validation data instance
-            //calculate the accuracy over the validation data
-            validationMSE = calcMeanSquaredError(strategy.getValidationFeatures(), strategy.getValidationLabels());
-            validationAccuracy = calculateValidationSetAccuracy(strategy);
-            //if the threshold validation accuracy is met, stop training, else continue
-            keepTraining = !isThresholdValidationAccuracyMet(validationAccuracy, bestAccuracy);
-            bestAccuracy = getBestAccuracy(validationAccuracy, bestAccuracy);
-            incrementTotalEpochs();
-            completeEpoch(getTotalEpochs(), trainingMSE, validationMSE, validationAccuracy);
-        }
-        double testMSE = calcMeanSquaredError(strategy.getTestingFeatures(), strategy.getTestingLabels());
-        double testAccuracy = measureAccuracy(strategy.getTestingFeatures(), strategy.getTestingLabels(), new Matrix());
-        outputFinalAccuracies(getTotalEpochs(), trainingMSE, validationMSE, testMSE, validationAccuracy, testAccuracy);
+        return outputFile;
     }
+
+    public void setOutputFile(String outputFile)
+    {
+        this.outputFile = outputFile;
+    }
+
+    public abstract void train(LearningStrategy strategy) throws Exception;
 
     protected double getBestAccuracy(double newValue, double previousBest)
     {
@@ -186,37 +158,12 @@ public abstract class SupervisedLearner
         }
     }
 
-    protected void outputFinalAccuracies(int epoch, double trainingMSE, double validationMSE, double testMSE, double validationClassificationAccuracy, double testClassificationAccuracy)
+    public void writeAccuraciesAndFinalWeights(double trainAccuracy, double testAccuracy)
     {
-        if (outputFile != null)
-        {
-            try (FileWriter writer = new FileWriter(outputFile, true))
-            {
-                writer.append(String.format("%s, %s, %s, %s, %s, %s\n", epoch, trainingMSE, validationMSE, testMSE, validationClassificationAccuracy, testClassificationAccuracy));
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
+
     }
 
-    protected double calculateValidationSetAccuracy(LearningStrategy strategy) throws Exception
-    {
-        Matrix validationFeatures = strategy.getValidationFeatures();
-        Matrix validationLabels = strategy.getValidationLabels();
-        return measureAccuracy(validationFeatures, validationLabels, new Matrix());
-    }
-
-    protected abstract void initializeWeights(int features, int outputs);
-
-    protected abstract void analyzeInputRow(double[] row, double expectedOutput);
-
-    protected abstract boolean isThresholdValidationAccuracyMet(double validationAccuracy, double bestAccuracy);
-
-    public abstract void writeAccuraciesAndFinalWeights(double trainAccuracy, double testAccuracy);
-
-    private double calcMeanSquaredError(Matrix features, Matrix labels) throws Exception
+    protected double calcMeanSquaredError(Matrix features, Matrix labels) throws Exception
     {
         assert features.rows() == labels.rows();
         double mse = 0;
@@ -235,10 +182,5 @@ public abstract class SupervisedLearner
     private double calcMeanSquaredError(double expected, double actual)
     {
         return (expected * actual) * (expected * actual);
-    }
-
-    public void setOutputFile(String outputFile)
-    {
-        this.outputFile = outputFile;
     }
 }

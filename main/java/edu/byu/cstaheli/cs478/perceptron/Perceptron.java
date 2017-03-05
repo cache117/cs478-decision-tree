@@ -1,15 +1,15 @@
 package edu.byu.cstaheli.cs478.perceptron;
 
-import edu.byu.cstaheli.cs478.toolkit.Matrix;
-import edu.byu.cstaheli.cs478.toolkit.RandomLearner;
+import edu.byu.cstaheli.cs478.toolkit.learner.EpochLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
+import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 import java.util.Random;
 
 /**
  * Created by cstaheli on 1/17/2017.
  */
-public class Perceptron extends RandomLearner
+public class Perceptron extends EpochLearner
 {
     private static final int EPOCHS_WITHOUT_SIGNIFICANT_IMPROVEMENT = 5;
     private double[] weights;

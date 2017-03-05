@@ -1,6 +1,6 @@
 package edu.byu.cstaheli.cs478.backpropogation;
 
-import edu.byu.cstaheli.cs478.toolkit.RandomWeightGenerator;
+import edu.byu.cstaheli.cs478.toolkit.utility.RandomWeightGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

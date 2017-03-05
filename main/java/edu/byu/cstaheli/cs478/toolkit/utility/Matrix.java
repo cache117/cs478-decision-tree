@@ -1,4 +1,4 @@
-package edu.byu.cstaheli.cs478.toolkit;
+package edu.byu.cstaheli.cs478.toolkit.utility;
 // ----------------------------------------------------------------
 // The contents of this file are distributed under the CC0 license.
 // See http://creativecommons.org/publicdomain/zero/1.0/

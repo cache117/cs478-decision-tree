@@ -4,9 +4,9 @@ package edu.byu.cstaheli.cs478.baseline;
 // See http://creativecommons.org/publicdomain/zero/1.0/
 // ----------------------------------------------------------------
 
-import edu.byu.cstaheli.cs478.toolkit.Matrix;
-import edu.byu.cstaheli.cs478.toolkit.SupervisedLearner;
+import edu.byu.cstaheli.cs478.toolkit.learner.SupervisedLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
+import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 /**
  * For nominal labels, this model simply returns the majority class. For
@@ -40,24 +40,6 @@ public class BaselineLearner extends SupervisedLearner
     public void predict(double[] features, double[] labels) throws Exception
     {
         System.arraycopy(m_labels, 0, labels, 0, m_labels.length);
-    }
-
-    @Override
-    protected void initializeWeights(int features, int outputs)
-    {
-
-    }
-
-    @Override
-    protected void analyzeInputRow(double[] row, double expectedOutput)
-    {
-
-    }
-
-    @Override
-    protected boolean isThresholdValidationAccuracyMet(double validationAccuracy, double bestAccuracy)
-    {
-        return false;
     }
 
     @Override

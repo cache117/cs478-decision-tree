@@ -1,7 +1,7 @@
 package edu.byu.cstaheli.cs478.perceptron;
 
-import edu.byu.cstaheli.cs478.toolkit.MLSystemManager;
-import edu.byu.cstaheli.cs478.toolkit.Matrix;
+import edu.byu.cstaheli.cs478.toolkit.utility.MLSystemManager;
+import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 import java.util.Random;
 

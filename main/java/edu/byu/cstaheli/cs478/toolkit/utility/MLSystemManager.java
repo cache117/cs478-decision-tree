@@ -1,4 +1,4 @@
-package edu.byu.cstaheli.cs478.toolkit;
+package edu.byu.cstaheli.cs478.toolkit.utility;
 // ----------------------------------------------------------------
 // The contents of this file are distributed under the CC0 license.
 // See http://creativecommons.org/publicdomain/zero/1.0/
@@ -8,6 +8,8 @@ package edu.byu.cstaheli.cs478.toolkit;
 import edu.byu.cstaheli.cs478.backpropogation.BackPropagation;
 import edu.byu.cstaheli.cs478.baseline.BaselineLearner;
 import edu.byu.cstaheli.cs478.perceptron.Perceptron;
+import edu.byu.cstaheli.cs478.toolkit.learner.LearnerData;
+import edu.byu.cstaheli.cs478.toolkit.learner.SupervisedLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.*;
 
 import java.util.Random;

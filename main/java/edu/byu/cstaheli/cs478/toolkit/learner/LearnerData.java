@@ -1,4 +1,7 @@
-package edu.byu.cstaheli.cs478.toolkit;
+package edu.byu.cstaheli.cs478.toolkit.learner;
+
+import edu.byu.cstaheli.cs478.toolkit.utility.ArgParser;
+import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 import java.util.Random;
 

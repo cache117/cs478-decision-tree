@@ -1,6 +1,6 @@
 package edu.byu.cstaheli.cs478.backpropogation;
 
-import edu.byu.cstaheli.cs478.toolkit.RandomLearner;
+import edu.byu.cstaheli.cs478.toolkit.learner.EpochLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Created by cstaheli on 1/31/2017.
  */
-public class BackPropagation extends RandomLearner
+public class BackPropagation extends EpochLearner
 {
     private static final int EPOCHS_WITHOUT_SIGNIFICANT_IMPROVEMENT = 10;
 

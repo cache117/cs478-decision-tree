@@ -1,4 +1,4 @@
-package edu.byu.cstaheli.cs478.toolkit;
+package edu.byu.cstaheli.cs478.toolkit.utility;
 
 import java.util.Random;
 
@@ -53,13 +53,13 @@ public class RandomWeightGenerator
         return random;
     }
 
-    public void setRandom(Random random)
-    {
-        this.random = random;
-    }
-
     public void setRandom(long seed)
     {
         this.random = new Random(seed);
+    }
+
+    public void setRandom(Random random)
+    {
+        this.random = random;
     }
 }

@@ -1,6 +1,6 @@
 package edu.byu.cstaheli.cs478.backpropogation;
 
-import edu.byu.cstaheli.cs478.toolkit.MLSystemManager;
+import edu.byu.cstaheli.cs478.toolkit.utility.MLSystemManager;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -24,28 +24,28 @@ class BackPropagationTest
     @Test
     public void testBackPropagation() throws Exception
     {
-//        String[] args;
-//        MLSystemManager manager = new MLSystemManager();
-//        String datasetsLocation = "src/test/resources/datasets/";
-//        System.out.println("Training");
+        String[] args;
+        MLSystemManager manager = new MLSystemManager();
+        String datasetsLocation = "src/test/resources/datasets/backpropagation/";
+        System.out.println("Training");
 //        args = ("-L backpropagation -A " + datasetsLocation + "nodeTests.arff -E training -V").split(" ");
 //        manager.run(args);
-//        System.out.println("Training");
-//        args = ("-L backpropagation -A " + datasetsLocation + "voting.arff -E training -V").split(" ");
-//        manager.run(args);
-//        System.out.println("Cross Fold Validation");
-//        args = ("-L backpropagation -A " + datasetsLocation + "voting.arff -E cross 25").split(" ");
-//        manager.run(args);
+        System.out.println("Training");
+        args = ("-L backpropagation -A " + datasetsLocation + "voting.arff -E training -V").split(" ");
+        manager.run(args);
+        System.out.println("Cross Fold Validation");
+        args = ("-L backpropagation -A " + datasetsLocation + "voting.arff -E cross 25").split(" ");
+        manager.run(args);
 //        testIrisDataSet();
-//        BackPropagation backPropagation = new BackPropagation(new Random(1234));
+        BackPropagation backPropagation = new BackPropagation(new Random(1234));
 //        assertTrue((new File(datasetsLocation + "vowelResults.csv").delete()));
 //        backPropagation.setOutputFile(datasetsLocation + "vowelResults.csv");
-//        manager.setLearner(backPropagation);
-//        args = ("-L backpropagation -A " + datasetsLocation + "vowel.arff -E random .75").split(" ");
-//        manager.run(args);
+        manager.setLearner(backPropagation);
+        args = ("-L backpropagation -A " + datasetsLocation + "vowel.arff -E random .75").split(" ");
+        manager.run(args);
 //        testDifferentLearningRates();
 //        testNumberOfHiddenNodes();
-        testMomentumDifferences();
+//        testMomentumDifferences();
     }
 
     private void testIrisDataSet() throws Exception

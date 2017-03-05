@@ -1,9 +1,9 @@
-package edu.byu.cstaheli.cs478.toolkit;
+package edu.byu.cstaheli.cs478.toolkit.utility;
 
 /**
  * Class for parsing out the command line arguments
  */
-class ArgParser
+public class ArgParser
 {
 
     private String arff;

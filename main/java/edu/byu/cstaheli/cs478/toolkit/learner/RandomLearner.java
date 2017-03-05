@@ -1,4 +1,6 @@
-package edu.byu.cstaheli.cs478.toolkit;
+package edu.byu.cstaheli.cs478.toolkit.learner;
+
+import edu.byu.cstaheli.cs478.toolkit.utility.RandomWeightGenerator;
 
 import java.util.Random;
 

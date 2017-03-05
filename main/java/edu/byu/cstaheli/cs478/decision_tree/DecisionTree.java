@@ -1,6 +1,7 @@
 package edu.byu.cstaheli.cs478.decision_tree;
 
-import edu.byu.cstaheli.cs478.toolkit.SupervisedLearner;
+import edu.byu.cstaheli.cs478.toolkit.learner.SupervisedLearner;
+import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
 
 /**
  * Created by cstaheli on 3/1/2017.
@@ -8,27 +9,15 @@ import edu.byu.cstaheli.cs478.toolkit.SupervisedLearner;
 public class DecisionTree extends SupervisedLearner
 {
     @Override
+    public void train(LearningStrategy strategy) throws Exception
+    {
+
+    }
+
+    @Override
     public void predict(double[] features, double[] labels) throws Exception
     {
 
-    }
-
-    @Override
-    protected void initializeWeights(int features, int outputs)
-    {
-
-    }
-
-    @Override
-    protected void analyzeInputRow(double[] row, double expectedOutput)
-    {
-
-    }
-
-    @Override
-    protected boolean isThresholdValidationAccuracyMet(double validationAccuracy, double bestAccuracy)
-    {
-        return false;
     }
 
     @Override

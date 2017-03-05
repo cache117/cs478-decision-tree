@@ -1,8 +1,8 @@
 package edu.byu.cstaheli.cs478.toolkit.strategy;
 
-import edu.byu.cstaheli.cs478.toolkit.LearnerData;
-import edu.byu.cstaheli.cs478.toolkit.Matrix;
 import edu.byu.cstaheli.cs478.toolkit.exception.MatrixException;
+import edu.byu.cstaheli.cs478.toolkit.learner.LearnerData;
+import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 /**
  * Created by cstaheli on 1/20/2017.
