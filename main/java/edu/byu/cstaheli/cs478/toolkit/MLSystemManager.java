@@ -1,4 +1,4 @@
-package edu.byu.cstaheli.cs478.toolkit.utility;
+package edu.byu.cstaheli.cs478.toolkit;
 // ----------------------------------------------------------------
 // The contents of this file are distributed under the CC0 license.
 // See http://creativecommons.org/publicdomain/zero/1.0/
@@ -7,10 +7,13 @@ package edu.byu.cstaheli.cs478.toolkit.utility;
 
 import edu.byu.cstaheli.cs478.backpropogation.BackPropagation;
 import edu.byu.cstaheli.cs478.baseline.BaselineLearner;
+import edu.byu.cstaheli.cs478.decision_tree.DecisionTree;
 import edu.byu.cstaheli.cs478.perceptron.Perceptron;
 import edu.byu.cstaheli.cs478.toolkit.learner.LearnerData;
 import edu.byu.cstaheli.cs478.toolkit.learner.SupervisedLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.*;
+import edu.byu.cstaheli.cs478.toolkit.utility.ArgParser;
+import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 import java.util.Random;
 
@@ -44,10 +47,8 @@ public class MLSystemManager
                 return new Perceptron(rand);
             case "backpropagation":
                 return new BackPropagation(rand);
-//            case "neuralnet":
-//                return new NeuralNet(rand);
-//            case "decisiontree":
-//                return new DecisionTree();
+            case "decisiontree":
+                return new DecisionTree();
 //            case "knn":
 //                return new InstanceBasedLearner();
             default:
@@ -67,9 +68,6 @@ public class MLSystemManager
 
     public void run(String[] args) throws Exception
     {
-
-        //args = new String[]{"-L", "baseline", "-A", "data/iris.arff", "-E", "cross", "10", "-N"};
-
         //Parse the command line arguments
         ArgParser parser = new ArgParser(args);
         determineEvalMethod(parser);
@@ -77,7 +75,6 @@ public class MLSystemManager
 
     public void setRandomSeed(long seed)
     {
-        //Random rand = new Random(1234); // Use a seed for deterministic results (makes debugging easier)
         setRandom(new Random(seed));
     }
 

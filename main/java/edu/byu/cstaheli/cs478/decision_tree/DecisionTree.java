@@ -19,10 +19,4 @@ public class DecisionTree extends SupervisedLearner
     {
 
     }
-
-    @Override
-    public void writeAccuraciesAndFinalWeights(double trainAccuracy, double testAccuracy)
-    {
-
-    }
 }
