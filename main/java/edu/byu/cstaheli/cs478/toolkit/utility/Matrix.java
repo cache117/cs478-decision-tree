@@ -355,19 +355,7 @@ public class Matrix
     // Returns the most common value in the specified column
     public double mostCommonValue(int col)
     {
-        TreeMap<Double, Integer> tm = new TreeMap<>();
-        for (int i = 0; i < rows(); i++)
-        {
-            double v = get(i, col);
-            if (v != MISSING)
-            {
-                Integer count = tm.get(v);
-                if (count == null)
-                    tm.put(v, 1);
-                else
-                    tm.put(v, count + 1);
-            }
-        }
+        TreeMap<Double, Integer> tm = getColumnOccurrences(col);
         int maxCount = 0;
         double val = MISSING;
         for (Entry<Double, Integer> e : tm.entrySet())
@@ -379,6 +367,24 @@ public class Matrix
             }
         }
         return val;
+    }
+
+    public TreeMap<Double, Integer> getColumnOccurrences(int col)
+    {
+        TreeMap<Double, Integer> tm = new TreeMap<>();
+        for (int i = 0; i < rows(); i++)
+        {
+            double v = get(i, col);
+//            if (v != MISSING)
+//            {
+            Integer count = tm.get(v);
+            if (count == null)
+                tm.put(v, 1);
+            else
+                tm.put(v, count + 1);
+//            }
+        }
+        return tm;
     }
 
     public void normalize()
