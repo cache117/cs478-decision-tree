@@ -33,6 +33,12 @@ public class Matrix
     {
     }
 
+    public Matrix(String fileName) throws FileNotFoundException, ARFFParseException
+    {
+        this();
+        loadArff(fileName);
+    }
+
     public Matrix(Matrix that)
     {
         this(that, 0, 0, that.rows(), that.cols());
@@ -414,7 +420,7 @@ public class Matrix
         Matrix newMatrix = new Matrix(this);
         Double doubleValue = value;
 
-        newMatrix.m_data.removeIf(row -> doubleValue.equals(row[columnClass]));
+        newMatrix.m_data.removeIf(row -> !doubleValue.equals(row[columnClass]));
         newMatrix.removeColumn(columnClass);
         return newMatrix;
     }
