@@ -10,6 +10,7 @@ import java.util.Random;
 public abstract class RandomLearner extends SupervisedLearner
 {
     private RandomWeightGenerator random;
+    private double learningRate;
 
     public RandomLearner(Random random)
     {
@@ -31,5 +32,15 @@ public abstract class RandomLearner extends SupervisedLearner
     protected void setRandom(Random random)
     {
         this.random = RandomWeightGenerator.getInstance(random);
+    }
+
+    public double getLearningRate()
+    {
+        return learningRate;
+    }
+
+    public void setLearningRate(double learningRate)
+    {
+        this.learningRate = learningRate;
     }
 }

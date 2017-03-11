@@ -4,6 +4,7 @@ package edu.byu.cstaheli.cs478.toolkit.utility;
 // See http://creativecommons.org/publicdomain/zero/1.0/
 // ----------------------------------------------------------------
 
+import edu.byu.cstaheli.cs478.decision_tree.util.Utility;
 import edu.byu.cstaheli.cs478.toolkit.exception.ARFFParseException;
 import edu.byu.cstaheli.cs478.toolkit.exception.IncompatibleMatrixException;
 import edu.byu.cstaheli.cs478.toolkit.exception.MatrixException;
@@ -30,6 +31,11 @@ public class Matrix
     // Creates a 0x0 matrix. You should call loadARFF or setSize next.
     public Matrix()
     {
+    }
+
+    public Matrix(Matrix that)
+    {
+        this(that, 0, 0, that.rows(), that.cols());
     }
 
     // Copies the specified portion of that matrix into this matrix
@@ -72,6 +78,22 @@ public class Matrix
             for (int i = 0; i < cols(); i++)
                 rowDest[i] = rowSrc[colStart + i];
             m_data.add(rowDest);
+        }
+    }
+
+    public void removeRow(int row)
+    {
+        m_data.remove(row);
+    }
+
+    public void removeColumn(int column)
+    {
+        m_attr_name.remove(column);
+        m_str_to_enum.remove(column);
+        m_enum_to_str.remove(column);
+        for (int i = 0; i < m_data.size(); ++i)
+        {
+            m_data.set(i, Utility.removeColumnFromRow(column, m_data.get(i)));
         }
     }
 
@@ -385,6 +407,16 @@ public class Matrix
 //            }
         }
         return tm;
+    }
+
+    public Matrix getRowsWithColumnClass(int columnClass, double value) throws MatrixException
+    {
+        Matrix newMatrix = new Matrix(this);
+        Double doubleValue = value;
+
+        newMatrix.m_data.removeIf(row -> doubleValue.equals(row[columnClass]));
+        newMatrix.removeColumn(columnClass);
+        return newMatrix;
     }
 
     public void normalize()

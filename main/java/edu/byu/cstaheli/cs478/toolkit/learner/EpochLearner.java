@@ -15,11 +15,13 @@ public abstract class EpochLearner extends RandomLearner
     private static final boolean OUTPUT_EACH_EPOCH = false;
 
     private int totalEpochs;
+    private double learningRate;
 
     public EpochLearner(Random random)
     {
         super(random);
         totalEpochs = 0;
+        learningRate = .1;
     }
 
     public void train(LearningStrategy strategy) throws Exception

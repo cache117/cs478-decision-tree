@@ -14,7 +14,7 @@ class DecisionTreeTest
         String[] args;
         MLSystemManager manager = new MLSystemManager();
         String datasetsLocation = "src/test/resources/datasets/decision_tree/";
-        args = ("-L decisiontree -A " + datasetsLocation + "voting.arff -E training -V").split(" ");
+        args = ("-L decisiontree -A " + datasetsLocation + "pizza.arff -E training -V").split(" ");
         manager.run(args);
     }
 

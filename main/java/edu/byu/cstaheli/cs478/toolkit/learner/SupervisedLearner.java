@@ -9,12 +9,10 @@ import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
 public abstract class SupervisedLearner
 {
-    private double learningRate;
     private String outputFile;
 
     protected SupervisedLearner()
     {
-        setLearningRate(.1);
     }
 
     protected String getOutputFile()
@@ -99,16 +97,6 @@ public abstract class SupervisedLearner
             }
             return (double) correctCount / features.rows();
         }
-    }
-
-    public double getLearningRate()
-    {
-        return learningRate;
-    }
-
-    public void setLearningRate(double learningRate)
-    {
-        this.learningRate = learningRate;
     }
 
     protected double calcMeanSquaredError(Matrix features, Matrix labels) throws Exception
