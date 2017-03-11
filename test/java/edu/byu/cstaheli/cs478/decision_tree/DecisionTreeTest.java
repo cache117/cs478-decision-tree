@@ -1,8 +1,12 @@
 package edu.byu.cstaheli.cs478.decision_tree;
 
+import edu.byu.cstaheli.cs478.decision_tree.node.FeatureNode;
 import edu.byu.cstaheli.cs478.toolkit.MLSystemManager;
 import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,12 +21,86 @@ class DecisionTreeTest
     private static void assertNumberBetween(double number, double lowerBound, double upperBound)
     {
         assertTrue(Double.compare(number, lowerBound) != -1 && Double.compare(number, upperBound) != 1, String.format("Actual: %s. Expected Bounds[%s, %s].", number, lowerBound, upperBound));
-        assertTrue(number >= lowerBound && number <= upperBound, String.format("Actual: %s. Expected Bounds[%s, %s].", number, lowerBound, upperBound));
+        //assertTrue(number >= lowerBound && number <= upperBound, String.format("Actual: %s. Expected Bounds[%s, %s].", number, lowerBound, upperBound));
     }
 
     private static void assertNumbersEqualWithEpsilon(double expected, double actual, double epsilon)
     {
         assertNumberBetween(actual, expected - epsilon, expected + epsilon);
+    }
+
+    @Test
+    void getFeatureNode() throws Exception
+    {
+        Matrix matrix = new Matrix(datasetsLocation + "pizza.arff");
+        DecisionTree tree = new DecisionTree();
+        FeatureNode featureNode = (FeatureNode) tree.getFeatureNode(matrix);
+        int splitOn = featureNode.getSplitColumn();
+        assertEquals(0, splitOn);
+        double primaryColumnValue = featureNode.getPrimaryColumnValue();
+        assertEquals(0, primaryColumnValue);
+
+        Matrix noMeatMatrix = matrix.getRowsWithColumnClass(0, 0.0);
+        featureNode = (FeatureNode) tree.getFeatureNode(noMeatMatrix);
+        splitOn = featureNode.getSplitColumn();
+        assertEquals(1, splitOn);
+
+        Matrix yesMeatMatrix = matrix.getRowsWithColumnClass(0, 0.0);
+        featureNode = (FeatureNode) tree.getFeatureNode(yesMeatMatrix);
+        splitOn = featureNode.getSplitColumn();
+        assertEquals(1, splitOn);
+
+    }
+
+    @Test
+    void getNodeChildren() throws Exception
+    {
+        Matrix matrix = new Matrix(datasetsLocation + "pizza.arff");
+        DecisionTree tree = new DecisionTree();
+    }
+
+    @Test
+    void getLeafNodeIfAny() throws Exception
+    {
+        Matrix matrix = new Matrix(datasetsLocation + "pizza.arff");
+        DecisionTree tree = new DecisionTree();
+    }
+
+    @Test
+    void getMostProbable() throws Exception
+    {
+        Map<Double, Integer> outputDistribution = new TreeMap<>();
+        outputDistribution.put(0.0, 5);
+        outputDistribution.put(1.0, 15);
+        outputDistribution.put(2.0, 14);
+        DecisionTree tree = new DecisionTree();
+        double mostProbable = tree.getMostProbable(outputDistribution);
+        assertEquals(1.0, mostProbable);
+        outputDistribution.put(3.0, 15);
+        mostProbable = tree.getMostProbable(outputDistribution);
+        assertEquals(1.0, mostProbable);
+        outputDistribution.put(4.0, 16);
+        mostProbable = tree.getMostProbable(outputDistribution);
+        assertEquals(4.0, mostProbable);
+    }
+
+    @Test
+    void getPureClassIfAny() throws Exception
+    {
+        Map<Double, Integer> outputDistribution = new TreeMap<>();
+        outputDistribution.put(0.0, 5);
+        outputDistribution.put(1.0, 15);
+        outputDistribution.put(2.0, 14);
+        DecisionTree tree = new DecisionTree();
+        Map.Entry<Double, Integer> pureClassIfAny = tree.getPureClassIfAny(outputDistribution);
+        assertEquals(null, pureClassIfAny);
+
+        outputDistribution = new TreeMap<>();
+        outputDistribution.put(0.0, 0);
+        outputDistribution.put(1.0, 0);
+        outputDistribution.put(2.0, 14);
+        pureClassIfAny = tree.getPureClassIfAny(outputDistribution);
+        assertEquals(2.0, (double) pureClassIfAny.getKey());
     }
 
     @Test
@@ -35,6 +113,7 @@ class DecisionTreeTest
         Matrix meatMatrix = matrix.getRowsWithColumnClass(0, 0.0);
         bestFeature = tree.getBestFeature(meatMatrix);
         assertEquals(1, bestFeature);
+        Matrix veggieMatrix = matrix.getRowsWithColumnClass(1, 0);
     }
 
     @Test
@@ -66,11 +145,23 @@ class DecisionTreeTest
     }
 
     @Test
-    void testRunManager() throws Exception
+    void runManager() throws Exception
     {
         String[] args;
         MLSystemManager manager = new MLSystemManager();
         args = ("-L decisiontree -A " + datasetsLocation + "pizza.arff -E training -V").split(" ");
+        manager.run(args);
+
+        args = ("-L decisiontree -A " + datasetsLocation + "tennis.arff -E training -V").split(" ");
+        manager.run(args);
+
+        args = ("-L decisiontree -A " + datasetsLocation + "lenses.arff -E training -V").split(" ");
+        manager.run(args);
+
+        args = ("-L decisiontree -A " + datasetsLocation + "voting.arff -E training -V").split(" ");
+        manager.run(args);
+
+        args = ("-L decisiontree -A " + datasetsLocation + "cars.arff -E training -V").split(" ");
         manager.run(args);
     }
 

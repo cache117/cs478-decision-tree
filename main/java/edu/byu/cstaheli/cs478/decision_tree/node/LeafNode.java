@@ -3,7 +3,7 @@ package edu.byu.cstaheli.cs478.decision_tree.node;
 /**
  * Created by cstaheli on 3/9/2017.
  */
-public class LeafNode extends DecisionTreeNode
+public class LeafNode extends Node
 {
     private double outputClass;
 

@@ -1,8 +1,8 @@
 package edu.byu.cstaheli.cs478.decision_tree;
 
-import edu.byu.cstaheli.cs478.decision_tree.node.DecisionTreeNode;
 import edu.byu.cstaheli.cs478.decision_tree.node.FeatureNode;
 import edu.byu.cstaheli.cs478.decision_tree.node.LeafNode;
+import edu.byu.cstaheli.cs478.decision_tree.node.Node;
 import edu.byu.cstaheli.cs478.toolkit.exception.MatrixException;
 import edu.byu.cstaheli.cs478.toolkit.learner.SupervisedLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class DecisionTree extends SupervisedLearner
 {
     private final static Logger LOGGER = Logger.getLogger(DecisionTree.class.getName());
-    private DecisionTreeNode decisionTreeRoot;
+    private Node decisionTreeRoot;
 
     @Override
     public void train(LearningStrategy strategy) throws Exception
@@ -28,22 +28,33 @@ public class DecisionTree extends SupervisedLearner
         Matrix trainingLabels = strategy.getTrainingLabels();
         Matrix trainingData = strategy.getTrainingData();
         decisionTreeRoot = populateDecisionTree(trainingData);
-        prune(decisionTreeRoot, strategy.getValidationData());
+        prune(decisionTreeRoot, strategy);
     }
 
-    private void prune(DecisionTreeNode decisionTreeRoot, Matrix validationData)
+    private void prune(Node decisionTreeRoot, LearningStrategy strategy)
     {
         return;
     }
 
-    public DecisionTreeNode populateDecisionTree(Matrix matrix) throws MatrixException
+    public Node populateDecisionTree(Matrix matrix) throws MatrixException
+    {
+        Node leafNode = getLeafNodeIfAny(matrix);
+        if (leafNode != null)
+        {
+            return leafNode;
+        }
+
+        return getFeatureNode(matrix);
+    }
+
+    protected Node getLeafNodeIfAny(Matrix matrix)
     {
         Map<Double, Integer> outputDistribution = matrix.getColumnOccurrences(matrix.cols() - 1);
-        LOGGER.info("Output Class Distributions:");
-        for (Map.Entry<Double, Integer> entry : outputDistribution.entrySet())
-        {
-            LOGGER.info(String.format("Class: %s, Occurrences: %s", entry.getKey(), entry.getValue()));
-        }
+//        LOGGER.info("Output Class Distributions:");
+//        for (Map.Entry<Double, Integer> entry : outputDistribution.entrySet())
+//        {
+//            LOGGER.info(String.format("Class: %s, Occurrences: %s", entry.getKey(), entry.getValue()));
+//        }
         Map.Entry<Double, Integer> pureClassIfAny = getPureClassIfAny(outputDistribution);
         if (pureClassIfAny != null)
         {
@@ -53,36 +64,10 @@ public class DecisionTree extends SupervisedLearner
         {
             return new LeafNode(getMostProbable(outputDistribution));
         }
-
-        int bestFeature = getBestFeature(matrix);
-        Map<Double, Integer> featureDistribution = matrix.getColumnOccurrences(bestFeature);
-        DecisionTreeNode node = new FeatureNode(bestFeature);
-        List<DecisionTreeNode> children = new ArrayList<>();
-        for (Map.Entry<Double, Integer> entry : featureDistribution.entrySet())
-        {
-            Matrix filteredMatrix = matrix.getRowsWithColumnClass(bestFeature, entry.getKey());
-            children.add(populateDecisionTree(filteredMatrix));
-        }
-        node.setChildren(children);
-        return node;
+        return null;
     }
 
-    private double getMostProbable(Map<Double, Integer> outputDistribution)
-    {
-        Double bestKey = 0.0;
-        int maxCount = 0;
-        for (Map.Entry<Double, Integer> entry : outputDistribution.entrySet())
-        {
-            if (entry.getValue() > maxCount)
-            {
-                maxCount = entry.getValue();
-                bestKey = entry.getKey();
-            }
-        }
-        return bestKey;
-    }
-
-    private Map.Entry<Double, Integer> getPureClassIfAny(Map<Double, Integer> occurrences)
+    protected Map.Entry<Double, Integer> getPureClassIfAny(Map<Double, Integer> occurrences)
     {
         Map.Entry<Double, Integer> pureEntry = null;
         int numberOfZeroOccurrences = 0;
@@ -98,18 +83,58 @@ public class DecisionTree extends SupervisedLearner
                 pureEntry = entry;
             }
         }
-        if (numberOfZeroOccurrences == 1)
+        if (numberOfZeroOccurrences == occurrences.size() - 1)
         {
             return pureEntry;
         }
         return null;
     }
 
+    protected double getMostProbable(Map<Double, Integer> outputDistribution)
+    {
+        Double bestKey = 0.0;
+        int maxCount = 0;
+        for (Map.Entry<Double, Integer> entry : outputDistribution.entrySet())
+        {
+            if (entry.getValue() > maxCount)
+            {
+                maxCount = entry.getValue();
+                bestKey = entry.getKey();
+            }
+        }
+        return bestKey;
+    }
+
+    protected Node getFeatureNode(Matrix matrix) throws MatrixException
+    {
+        int bestFeature = getBestFeature(matrix);
+        String attributeName = matrix.attrName(bestFeature);
+        Node node = new FeatureNode(bestFeature, attributeName);
+        List<Node> children = getNodeChildren(matrix, bestFeature);
+        node.setChildren(children);
+        return node;
+    }
+
+    protected List<Node> getNodeChildren(Matrix matrix, int bestFeature) throws MatrixException
+    {
+        Map<Double, Integer> featureDistribution = matrix.getColumnOccurrences(bestFeature);
+        List<Node> children = new ArrayList<>();
+        for (Map.Entry<Double, Integer> entry : featureDistribution.entrySet())
+        {
+            Matrix filteredMatrix = matrix.getRowsWithColumnClass(bestFeature, entry.getKey());
+            Node node = populateDecisionTree(filteredMatrix);
+            node.setPrimaryColumnValue(entry.getKey());
+            node.setAttributeName(matrix.attrName(bestFeature));
+            children.add(node);
+        }
+        return children;
+    }
+
     public int getBestFeature(Matrix matrix) throws MatrixException
     {
         double outputInformation = calculateOutputInformation(matrix);
         double bestInformationGain = 0;
-        int bestFeature = 0;
+        int bestFeature = -1;
         for (int i = 0; i < matrix.cols() - 1; ++i)
         {
             double featureInformation = calculateFeatureInformation(matrix, i);
