@@ -5,6 +5,7 @@ import edu.byu.cstaheli.cs478.toolkit.MLSystemManager;
 import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -147,23 +148,53 @@ class DecisionTreeTest
     @Test
     void runManager() throws Exception
     {
-        String[] args;
-        MLSystemManager manager = new MLSystemManager();
-        args = ("-L decisiontree -A " + datasetsLocation + "pizza.arff -E training -V").split(" ");
-        manager.run(args);
+//        String[] args;
+//        MLSystemManager manager = new MLSystemManager();
+//        args = ("-L decisiontree -A " + datasetsLocation + "pizza.arff -E training -V").split(" ");
+//        manager.run(args);
+//
+//        args = ("-L decisiontree -A " + datasetsLocation + "tennis.arff -E training -V").split(" ");
+//        manager.run(args);
+//
+//        args = ("-L decisiontree -A " + datasetsLocation + "lenses.arff -E training -V").split(" ");
+//        manager.run(args);
+//
+//        args = ("-L decisiontree -A " + datasetsLocation + "voting.arff -E training -V").split(" ");
+//        manager.run(args);
 
-        args = ("-L decisiontree -A " + datasetsLocation + "tennis.arff -E training -V").split(" ");
-        manager.run(args);
-
-        args = ("-L decisiontree -A " + datasetsLocation + "lenses.arff -E training -V").split(" ");
-        manager.run(args);
-
-        args = ("-L decisiontree -A " + datasetsLocation + "voting.arff -E training -V").split(" ");
-        manager.run(args);
-
-        args = ("-L decisiontree -A " + datasetsLocation + "cars.arff -E training -V").split(" ");
-        manager.run(args);
+//        args = ("-L decisiontree -A " + datasetsLocation + "cars.arff -E training -V").split(" ");
+//        manager.run(args);
+//        runCarsTestNoPruning();
+        runVotingTestNoPruning();
     }
 
+    private void runCarsTestNoPruning() throws Exception
+    {
+        String[] args;
+        MLSystemManager manager = new MLSystemManager();
+        assertTrue(new File(datasetsLocation + "carTests/car1.csv").delete());
+        for (int i = 0; i < 5; ++i)
+        {
+            DecisionTree decisionTree = new DecisionTree();
+            decisionTree.setOutputFile(datasetsLocation + "carTests/car1.csv");
+            manager.setLearner(decisionTree);
+            args = ("-L decisiontree -A " + datasetsLocation + "cars.arff -E cross 10 -V").split(" ");
+            manager.run(args);
+        }
+    }
 
+    private void runVotingTestNoPruning() throws Exception
+    {
+        String[] args;
+        MLSystemManager manager = new MLSystemManager();
+        assertTrue(new File(datasetsLocation + "votingTests/voting1.csv").delete());
+        for (int i = 0; i < 5; ++i)
+        {
+            DecisionTree decisionTree = new DecisionTree();
+            decisionTree.setOutputFile(datasetsLocation + "votingTests/voting1.csv");
+            manager.setLearner(decisionTree);
+            args = ("-L decisiontree -A " + datasetsLocation + "voting.arff -E cross 10 -V").split(" ");
+            manager.run(args);
+        }
+    }
 }

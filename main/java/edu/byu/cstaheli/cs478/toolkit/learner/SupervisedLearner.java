@@ -119,4 +119,9 @@ public abstract class SupervisedLearner
     {
         return (expected - actual) * (expected - actual);
     }
+
+    protected boolean shouldOutput()
+    {
+        return (getOutputFile() != null);
+    }
 }

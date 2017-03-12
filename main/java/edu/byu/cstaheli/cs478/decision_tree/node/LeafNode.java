@@ -17,4 +17,15 @@ public class LeafNode extends Node
     {
         return outputClass;
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Leaf: Attr:\"%s\", Output:\"%s\"", getAttributeName(), getOutputClass());
+    }
+
+    private double getOutputClass()
+    {
+        return outputClass;
+    }
 }

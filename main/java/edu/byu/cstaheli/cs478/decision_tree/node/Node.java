@@ -61,4 +61,9 @@ public abstract class Node
     {
         this.attributeName = attributeName;
     }
+
+    protected int getNumberOfChildren()
+    {
+        return children.size();
+    }
 }

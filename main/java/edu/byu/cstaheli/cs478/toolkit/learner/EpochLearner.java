@@ -129,8 +129,4 @@ public abstract class EpochLearner extends RandomLearner
         ++this.totalEpochs;
     }
 
-    protected boolean shouldOutput()
-    {
-        return (getOutputFile() != null);
-    }
 }

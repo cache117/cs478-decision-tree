@@ -8,6 +8,7 @@ import edu.byu.cstaheli.cs478.toolkit.learner.SupervisedLearner;
 import edu.byu.cstaheli.cs478.toolkit.strategy.LearningStrategy;
 import edu.byu.cstaheli.cs478.toolkit.utility.Matrix;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class DecisionTree extends SupervisedLearner
 {
     private final static Logger LOGGER = Logger.getLogger(DecisionTree.class.getName());
     private Node decisionTreeRoot;
+    private boolean prune;
 
     @Override
     public void train(LearningStrategy strategy) throws Exception
@@ -28,7 +30,12 @@ public class DecisionTree extends SupervisedLearner
         Matrix trainingLabels = strategy.getTrainingLabels();
         Matrix trainingData = strategy.getTrainingData();
         decisionTreeRoot = populateDecisionTree(trainingData);
-        prune(decisionTreeRoot, strategy);
+        if (prune)
+        {
+            prune(decisionTreeRoot, strategy);
+        }
+        outputFinalClassifications(strategy);
+        outputStatistics(strategy);
     }
 
     private void prune(Node decisionTreeRoot, LearningStrategy strategy)
@@ -196,6 +203,42 @@ public class DecisionTree extends SupervisedLearner
         assert totalOutcomes != 0;
         assert favorableOutcomes <= totalOutcomes;
         return ((double) favorableOutcomes / (double) totalOutcomes);
+    }
+
+    private void outputFinalClassifications(LearningStrategy strategy)
+    {
+        if (shouldOutput())
+        {
+            try (FileWriter writer = new FileWriter(getOutputFile(), true))
+            {
+                double trainingAccuracy = measureAccuracy(strategy.getTrainingFeatures(), strategy.getTrainingLabels(), null);
+                double validationAccuracy = measureAccuracy(strategy.getValidationFeatures(), strategy.getValidationLabels(), null);
+                double testingAccuracy = measureAccuracy(strategy.getTestingFeatures(), strategy.getTestingLabels(), null);
+                writer.append(String.format("%s, %s, %s\n", trainingAccuracy, validationAccuracy, testingAccuracy));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void outputStatistics(LearningStrategy strategy)
+    {
+        if (shouldOutput())
+        {
+            try (FileWriter writer = new FileWriter(getOutputFile(), true))
+            {
+                int numberOfNodesInTree = 0;
+                int depthOfTree = 0;
+                double testingAccuracy = measureAccuracy(strategy.getTestingFeatures(), strategy.getTestingLabels(), null);
+                writer.append(String.format("%s, %s, %s\n", numberOfNodesInTree, depthOfTree, testingAccuracy));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
