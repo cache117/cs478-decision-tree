@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class DecisionTree extends SupervisedLearner
 {
     private final static Logger LOGGER = Logger.getLogger(DecisionTree.class.getName());
-    private Node decisionTreeRoot;
+    private FeatureNode decisionTreeRoot;
     private boolean prune;
 
     @Override
@@ -29,18 +29,17 @@ public class DecisionTree extends SupervisedLearner
         Matrix trainingFeatures = strategy.getTrainingFeatures();
         Matrix trainingLabels = strategy.getTrainingLabels();
         Matrix trainingData = strategy.getTrainingData();
-        decisionTreeRoot = populateDecisionTree(trainingData);
+        decisionTreeRoot = (FeatureNode) populateDecisionTree(trainingData);
         if (prune)
         {
-            prune(decisionTreeRoot, strategy);
+            prune(strategy);
         }
-        outputFinalClassifications(strategy);
-        outputStatistics(strategy);
+        outputFinalStatistics(strategy);
     }
 
-    private void prune(Node decisionTreeRoot, LearningStrategy strategy)
+    private void prune(LearningStrategy strategy) throws Exception
     {
-        return;
+        decisionTreeRoot.tryPruning(strategy, this);
     }
 
     public Node populateDecisionTree(Matrix matrix) throws MatrixException
@@ -116,7 +115,7 @@ public class DecisionTree extends SupervisedLearner
     {
         int bestFeature = getBestFeature(matrix);
         String attributeName = matrix.attrName(bestFeature);
-        Node node = new FeatureNode(bestFeature, attributeName);
+        FeatureNode node = new FeatureNode(bestFeature, attributeName);
         List<Node> children = getNodeChildren(matrix, bestFeature);
         node.setChildren(children);
         return node;
@@ -205,7 +204,7 @@ public class DecisionTree extends SupervisedLearner
         return ((double) favorableOutcomes / (double) totalOutcomes);
     }
 
-    private void outputFinalClassifications(LearningStrategy strategy)
+    private void outputFinalStatistics(LearningStrategy strategy)
     {
         if (shouldOutput())
         {
@@ -214,25 +213,9 @@ public class DecisionTree extends SupervisedLearner
                 double trainingAccuracy = measureAccuracy(strategy.getTrainingFeatures(), strategy.getTrainingLabels(), null);
                 double validationAccuracy = measureAccuracy(strategy.getValidationFeatures(), strategy.getValidationLabels(), null);
                 double testingAccuracy = measureAccuracy(strategy.getTestingFeatures(), strategy.getTestingLabels(), null);
-                writer.append(String.format("%s, %s, %s\n", trainingAccuracy, validationAccuracy, testingAccuracy));
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void outputStatistics(LearningStrategy strategy)
-    {
-        if (shouldOutput())
-        {
-            try (FileWriter writer = new FileWriter(getOutputFile(), true))
-            {
-                int numberOfNodesInTree = 0;
-                int depthOfTree = 0;
-                double testingAccuracy = measureAccuracy(strategy.getTestingFeatures(), strategy.getTestingLabels(), null);
-                writer.append(String.format("%s, %s, %s\n", numberOfNodesInTree, depthOfTree, testingAccuracy));
+                int numberOfNodesInTree = getNumberOfNodesInTree();
+                int depthOfTree = getDepthOfTree();
+                writer.append(String.format("%s, %s, %s, %s, %s\n", trainingAccuracy, validationAccuracy, testingAccuracy, numberOfNodesInTree, depthOfTree));
             }
             catch (Exception e)
             {
@@ -247,4 +230,18 @@ public class DecisionTree extends SupervisedLearner
         labels[0] = decisionTreeRoot.getOutputClass(features);
     }
 
+    public void shouldPrune(boolean prune)
+    {
+        this.prune = prune;
+    }
+
+    public int getNumberOfNodesInTree()
+    {
+        return 1 + decisionTreeRoot.getNumberOfDescendants();
+    }
+
+    public int getDepthOfTree()
+    {
+        return decisionTreeRoot.getMaxTreeDepth();
+    }
 }

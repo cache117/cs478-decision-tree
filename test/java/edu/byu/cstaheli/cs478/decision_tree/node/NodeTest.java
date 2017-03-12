@@ -21,7 +21,7 @@ class NodeTest
     @Test
     void findChildWithPrimaryColumnValue()
     {
-        Node node = new FeatureNode(2, "Veggies");
+        FeatureNode node = new FeatureNode(2, "Veggies");
         Node child1 = new LeafNode(1.0);
         child1.setPrimaryColumnValue(0.0);
         Node child2 = new LeafNode(1.0);

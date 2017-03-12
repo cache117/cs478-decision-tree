@@ -165,7 +165,9 @@ class DecisionTreeTest
 //        args = ("-L decisiontree -A " + datasetsLocation + "cars.arff -E training -V").split(" ");
 //        manager.run(args);
 //        runCarsTestNoPruning();
-        runVotingTestNoPruning();
+//        runVotingTestNoPruning();
+        runCarsTestPruning();
+        runVotingTestPruning();
     }
 
     private void runCarsTestNoPruning() throws Exception
@@ -183,6 +185,22 @@ class DecisionTreeTest
         }
     }
 
+    private void runCarsTestPruning() throws Exception
+    {
+        String[] args;
+        MLSystemManager manager = new MLSystemManager();
+        assertTrue(new File(datasetsLocation + "carTests/car2.csv").delete());
+        for (int i = 0; i < 5; ++i)
+        {
+            DecisionTree decisionTree = new DecisionTree();
+            decisionTree.setOutputFile(datasetsLocation + "carTests/car2.csv");
+            decisionTree.shouldPrune(true);
+            manager.setLearner(decisionTree);
+            args = ("-L decisiontree -A " + datasetsLocation + "cars.arff -E cross 10 -V").split(" ");
+            manager.run(args);
+        }
+    }
+
     private void runVotingTestNoPruning() throws Exception
     {
         String[] args;
@@ -192,6 +210,22 @@ class DecisionTreeTest
         {
             DecisionTree decisionTree = new DecisionTree();
             decisionTree.setOutputFile(datasetsLocation + "votingTests/voting1.csv");
+            manager.setLearner(decisionTree);
+            args = ("-L decisiontree -A " + datasetsLocation + "voting.arff -E cross 10 -V").split(" ");
+            manager.run(args);
+        }
+    }
+
+    private void runVotingTestPruning() throws Exception
+    {
+        String[] args;
+        MLSystemManager manager = new MLSystemManager();
+        assertTrue(new File(datasetsLocation + "votingTests/voting2.csv").delete());
+        for (int i = 0; i < 5; ++i)
+        {
+            DecisionTree decisionTree = new DecisionTree();
+            decisionTree.setOutputFile(datasetsLocation + "votingTests/voting2.csv");
+            decisionTree.shouldPrune(true);
             manager.setLearner(decisionTree);
             args = ("-L decisiontree -A " + datasetsLocation + "voting.arff -E cross 10 -V").split(" ");
             manager.run(args);

@@ -11,11 +11,8 @@ import edu.byu.cstaheli.cs478.toolkit.exception.MatrixException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.TreeMap;
 
 public class Matrix
 {
@@ -383,7 +380,7 @@ public class Matrix
     // Returns the most common value in the specified column
     public double mostCommonValue(int col)
     {
-        TreeMap<Double, Integer> tm = getColumnOccurrences(col);
+        Map<Double, Integer> tm = getColumnOccurrences(col);
         int maxCount = 0;
         double val = MISSING;
         for (Entry<Double, Integer> e : tm.entrySet())
@@ -397,9 +394,9 @@ public class Matrix
         return val;
     }
 
-    public TreeMap<Double, Integer> getColumnOccurrences(int col)
+    public Map<Double, Integer> getColumnOccurrences(int col)
     {
-        TreeMap<Double, Integer> tm = new TreeMap<>();
+        Map<Double, Integer> tm = new TreeMap<>();
         for (int i = 0; i < rows(); i++)
         {
             double v = get(i, col);
