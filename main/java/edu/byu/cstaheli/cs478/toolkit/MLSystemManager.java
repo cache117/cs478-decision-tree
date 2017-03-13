@@ -23,6 +23,7 @@ public class MLSystemManager
 {
     private Random random;
     private SupervisedLearner learner;
+    private boolean binRealData;
 
     public MLSystemManager()
     {
@@ -89,6 +90,10 @@ public class MLSystemManager
 
         // Load the ARFF file
         Matrix arffData = new Matrix();
+        if (binRealData)
+        {
+            arffData.setBinRealValues(true);
+        }
         arffData.loadArff(parser.getARFF());
         if (parser.isNormalized())
         {
@@ -274,5 +279,10 @@ public class MLSystemManager
             builder.append(",").append(anArray);
         }
         return builder.toString();
+    }
+
+    public void binRealData(boolean value)
+    {
+        binRealData = value;
     }
 }

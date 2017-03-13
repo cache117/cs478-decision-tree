@@ -24,6 +24,7 @@ public class Matrix
     private ArrayList<TreeMap<String, Integer>> m_str_to_enum;
     private ArrayList<TreeMap<Integer, String>> m_enum_to_str;
     private String datasetName;
+    private boolean binRealValues;
 
     // Creates a 0x0 matrix. You should call loadARFF or setSize next.
     public Matrix()
@@ -62,6 +63,16 @@ public class Matrix
             m_str_to_enum.add(that.m_str_to_enum.get(colStart + i));
             m_enum_to_str.add(that.m_enum_to_str.get(colStart + i));
         }
+    }
+
+    public boolean isBinRealValues()
+    {
+        return binRealValues;
+    }
+
+    public void setBinRealValues(boolean binRealValues)
+    {
+        this.binRealValues = binRealValues;
     }
 
     // Adds a copy of the specified portion of that matrix to this matrix
@@ -242,6 +253,41 @@ public class Matrix
                 }
             }
         }
+        if (binRealValues)
+        {
+            for (int i = 0; i < m_data.size(); ++i)
+            {
+                double[] row = m_data.get(i);
+                for (int j = 0; j < row.length; ++j)
+                {
+                    if (valueCount(j) == 0)
+                    {
+                        double value = row[j];
+                        double mean = columnMean(j);
+                        double standardDeviation = columnStandardDeviation(j);
+                        double zScore = zScore(value, mean, standardDeviation);
+                        int numberOfStandardDeviations = (int) zScore;
+                        set(i, j, numberOfStandardDeviations);
+                    }
+                }
+            }
+            for (int i = 0; i < cols(); ++i)
+            {
+                if (valueCount(i) == 0)
+                {
+                    TreeMap<String, Integer> ste = m_str_to_enum.get(i);
+                    TreeMap<Integer, String> ets = m_enum_to_str.get(i);
+                    Map<Double, Integer> columnOccurrences = getColumnOccurrences(i);
+                    int counter = 0;
+                    for (Map.Entry<Double, Integer> entry : columnOccurrences.entrySet())
+                    {
+                        ste.put(String.valueOf(entry.getKey()), counter);
+                        ets.put(counter, String.valueOf(entry.getKey()));
+                        ++counter;
+                    }
+                }
+            }
+        }
     }
 
     // Returns the number of rows in the matrix
@@ -343,6 +389,36 @@ public class Matrix
             }
         }
         return sum / count;
+    }
+
+    public double columnStandardDeviation(int col)
+    {
+        double sum = 0;
+        double average = columnMean(col);
+        for (int i = 0; i < rows(); ++i)
+        {
+            double value = get(i, col);
+            if (value != MISSING)
+            {
+                sum += square(value - average) / rows();
+            }
+        }
+        return Math.sqrt(sum);
+    }
+
+    private double zScore(double value, double mean, double standardDeviation)
+    {
+        return (value - mean) / standardDeviation;
+    }
+
+    public void convertAllToNominal()
+    {
+
+    }
+
+    private double square(double value)
+    {
+        return value * value;
     }
 
     // Returns the min value in the specified column

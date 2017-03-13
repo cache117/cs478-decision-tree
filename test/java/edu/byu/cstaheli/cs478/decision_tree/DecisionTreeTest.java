@@ -166,8 +166,9 @@ class DecisionTreeTest
 //        manager.run(args);
 //        runCarsTestNoPruning();
 //        runVotingTestNoPruning();
-        runCarsTestPruning();
-        runVotingTestPruning();
+//        runCarsTestPruning();
+//        runVotingTestPruning();
+        runIris();
     }
 
     private void runCarsTestNoPruning() throws Exception
@@ -230,5 +231,14 @@ class DecisionTreeTest
             args = ("-L decisiontree -A " + datasetsLocation + "voting.arff -E cross 10 -V").split(" ");
             manager.run(args);
         }
+    }
+
+    private void runIris() throws Exception
+    {
+        String[] args;
+        MLSystemManager manager = new MLSystemManager();
+        manager.binRealData(true);
+        args = ("-L decisiontree -A " + datasetsLocation + "iris.arff -E training -V").split(" ");
+        manager.run(args);
     }
 }
